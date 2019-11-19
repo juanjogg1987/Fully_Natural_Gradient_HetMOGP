@@ -7,7 +7,7 @@ from GPy.likelihoods import Likelihood
 from scipy.stats import multinomial
 from functools import reduce
 from GPy.util.misc import safe_exp, safe_square
-from scipy.misc import logsumexp
+from scipy.special import logsumexp
 
 
 class Categorical(Likelihood):
