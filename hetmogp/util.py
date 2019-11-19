@@ -10,8 +10,6 @@ import numpy as np
 import climin
 from functools import partial
 import matplotlib.pyplot as plt
-import VariationalOptimization as vo
-
 
 def  get_batch_scales(X_all, X):
     batch_scales = []
@@ -344,7 +342,6 @@ def vem_algorithm(model, vem_iters=None, maxIter_perVEM = None, step_rate=None ,
                                    decay_mom1=1 - 0.9, decay_mom2=1 - 0.999)
             model.index_VEM = 2*(i) * maxIter_perVEM
             optimizer.minimize_until(c_full)
-            # vo.variational_opt_HetMOGP(model=model, max_iters=maxIter_perVEM, step_size=step_rate, momentum=0.0,prior_lambda=1.0e-1,MC=1)
 
             print('iteration (' + str(i + 1) + ') VE step, mini-batch log_likelihood=' + str(
                 model.log_likelihood().flatten()))
@@ -362,7 +359,6 @@ def vem_algorithm(model, vem_iters=None, maxIter_perVEM = None, step_rate=None ,
             optimizer = climin.Adam(model.optimizer_array, model.stochastic_grad, step_rate=step_rate,decay_mom1=1 - 0.9, decay_mom2=1 - 0.999)
             model.index_VEM = 2*(i) * maxIter_perVEM +maxIter_perVEM
             optimizer.minimize_until(c_full)
-            # vo.variational_opt_HetMOGP(model=model, max_iters=maxIter_perVEM, step_size=step_rate, momentum=0.0,prior_lambda=1.0e-1,MC=1)
             print('iteration (' + str(i + 1) + ') VM step, mini-batch log_likelihood=' + str(
                 model.log_likelihood().flatten()))
 
