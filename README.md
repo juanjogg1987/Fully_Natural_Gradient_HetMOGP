@@ -15,7 +15,6 @@ The following modules are a Forked version of [Pablo Morenoz](https://github.com
 
 ## Usage
 
-```
 * Ones the HetMOGP model is created as:
 ```
 model = SVMOGP(X=X, Y=Y, Z=Z, kern_list=kern_list, likelihood=likelihood, Y_metadata=Y_metadata, batch_size=batch)
@@ -38,7 +37,7 @@ A complete example of our model usage can be found in this repository at **noteb
 ## Examples
 * **Heterogeneous Model using Five Outputs:** The figure shows the Performance for Objective Convergence Using Stochastic Gradient Descent (SGD), Adam (Adaptive Momentum Method), HYB (NG+Adam) and
 Our FNG (Fully Natural Gradient) method.
-![toy2](tmp/toy2.png)
+![toy2](tmp/toy4.png)
 
 ## Contributors
 
