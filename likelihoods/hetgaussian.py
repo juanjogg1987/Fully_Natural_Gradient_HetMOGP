@@ -6,7 +6,7 @@ import numpy as np
 from GPy.likelihoods import link_functions
 from GPy.likelihoods import Likelihood
 from GPy.util.misc import safe_exp, safe_square
-from scipy.misc import logsumexp
+from scipy.special import logsumexp
 
 class HetGaussian(Likelihood):
     """
