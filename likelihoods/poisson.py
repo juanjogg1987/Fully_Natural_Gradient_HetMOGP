@@ -8,7 +8,7 @@ from GPy.likelihoods import link_functions
 from GPy.likelihoods import Likelihood
 from GPy.util.misc import safe_exp, safe_square
 from scipy.stats import poisson
-from scipy.misc import logsumexp
+from scipy.special import logsumexp
 
 
 
