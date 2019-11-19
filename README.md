@@ -30,7 +30,7 @@ An alternative inference scheme is the Hybrid (NG + Adam) which optimises the He
 hybrid_opt_HetMOGP(model, max_iters=1000, step_rate=0.01, decay_mom1=1-0.9,decay_mom2=1-0.999)
 ```
 
-A complete example of our model usage can be found in this repository at **notebooks > FullyNG_on_ToyData**
+A complete example of our model usage can be found in this repository at **notebooks > FullyNG_on_ToyData** where different toy examples can be tested.
 
 ## Examples
 * **Heterogeneous Model using Five Outputs:** The figure shows the Performance for Objective Convergence Using Stochastic Gradient Descent (SGD), Adam (Adaptive Momentum Method), HYB (NG+Adam) and
