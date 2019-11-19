@@ -125,7 +125,7 @@ def compute_stoch_grads_hyparam_HetMOGP(model, index_ini, hpmu,hpSig,ysample, mu
 
     return dL_dtheta, d2L_dtheta, dL_dZ, d2L_dZ, dL_dm, dL_dV, dL_dW, d2L_dW
 
-def variational_opt_HetMOGP(model,Xval=None,Yval=None, max_iters=1000, step_size=0.001, momentum=0.0, prior_lambda=1.0e-10, tao_VI=2.0, MC=None):
+def fullyng_opt_HetMOGP(model,Xval=None,Yval=None, max_iters=1000, step_size=0.001, momentum=0.0, prior_lambda=1.0e-10, tao_VI=2.0, MC=None):
 
     model['.*.kappa'].fix()
 
