@@ -1,5 +1,5 @@
-# Fully_Natural_Gradient_HetMOGP
-This is a repositoy with a Fully Natural Gradient Scheme for Improving optimisation of the Heterogeneous Multi-Output Gaussian Process Model
+# Fully Natural Gradient Optimisation
+This is a repositoy with a Fully Natural Gradient Scheme for Improving optimisation of the Heterogeneous Multi-Output Gaussian Process Model.
 
 # Fully Natural Gradient Scheme for Improving Inference of the Heterogeneous Multi-output Gaussian Processes Model
 
