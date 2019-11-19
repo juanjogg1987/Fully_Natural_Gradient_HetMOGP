@@ -8,7 +8,7 @@ from GPy.likelihoods import Likelihood
 from GPy.util.misc import safe_exp, safe_square
 from scipy.special import beta, betaln, psi, zeta, gamma, gammaln
 from functools import reduce
-from scipy.misc import logsumexp
+from scipy.special import logsumexp
 
 class Gamma(Likelihood):
     """
