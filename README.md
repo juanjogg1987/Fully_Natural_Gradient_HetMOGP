@@ -7,7 +7,7 @@ The repository consists of:
 - **fully_natural_gradient.py**: This module contains the functions **fullyng_opt_HetMOGP** and **hybrid_opt_HetMOGP**
 - **load_datasets.py**: This module contains different toy examples with different number of Heterogeneous Outputs. 
 
-The following modules are a Forked version of [Pablo Morenoz](https://github.com/pmorenoz/HetMOGP)'s implementation. We recommend the user to work using this package version:
+The following modules are a Forked version of [Pablo Moreno](https://github.com/pmorenoz/HetMOGP)'s implementation. We recommend the user to work using this package version:
 - **hetmogp**: This block contains all model definitions, inference, and important utilities. 
 - **likelihoods**: General library of probability distributions for the heterogeneous likelihood construction.
 
