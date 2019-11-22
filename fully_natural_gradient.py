@@ -16,19 +16,8 @@ def compute_stoch_grads_for_qu_HetMOGP(model):
             dL_dV[i] = dL_dV[i] + (-model.gradients['dL_dS_u'][i])
 
 
-    # These lines below are for numerical stability
-    if model.Ymulti_all.__len__()>1:
-    #if model.input_dim <= 5:
-        #dL_dm, dL_dV = [dL for dL in dL_dm], [dL for dL in dL_dV]
-        dL_dm, dL_dV = [np.clip(dL, -1.0e0, 1.0e0) for dL in dL_dm], [dL for dL in dL_dV]
-        #dL_dm, dL_dV = [np.clip(dL, eval('-5.0e' + str(model.input_dim)), eval('5.0e' + str(model.input_dim))) for dL in dL_dm], [dL for dL in dL_dV]
-    else:
-        if model.input_dim <= 5:
-            dL_dm, dL_dV = [np.clip(dL, -5.0e1, 5.0e1) for dL in dL_dm], [dL for dL in dL_dV]
-        else:
-            dL_dm, dL_dV = [np.clip(dL, -5.0e100, 5.0e100) for dL in dL_dm], [dL for dL in dL_dV]
 
-    #dL_dm, dL_dV = [dL / float(MC) for dL in dL_dm], [dL / float(MC) for dL in dL_dV]
+    dL_dm, dL_dV = [np.clip(dL, -1.0e0, 1.0e0) for dL in dL_dm], [dL for dL in dL_dV]
 
     return dL_dm, dL_dV
 
@@ -317,9 +306,9 @@ def fullyng_opt_HetMOGP(model,Xval=None,Yval=None, max_iters=1000, step_size=0.0
 
         if (Niter)%1==0:
 
-            model.update_model(False)
-            model.q_u_means.unfix()
-            model.q_u_chols.unfix()
+            # model.update_model(False)
+            # model.q_u_means.unfix()
+            # model.q_u_chols.unfix()
 
             dL_dm, dL_dV = compute_stoch_grads_for_qu_HetMOGP(model=model)
 
@@ -351,8 +340,8 @@ def fullyng_opt_HetMOGP(model,Xval=None,Yval=None, max_iters=1000, step_size=0.0
             model.m_u.setfield(mk, np.float64)
 
             if (Niter<max_iters-1):
-                model.q_u_means.fix()
-                model.q_u_chols.fix()
+                # model.q_u_means.fix()
+                # model.q_u_chols.fix()
                 if model.batch_size is not None:
                     model.set_data(*model.new_batch())
 
