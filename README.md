@@ -1,6 +1,6 @@
 # Fully Natural Gradient Scheme for Improving Inference of the HetMOGP model
 
-This repository contains an implementation of a Fully Natural Gradient (FullyNG) Scheme for improving optimisation of the Heterogeneous Multi-output Gaussian Process (HetMOGP) model (visit https://github.com/pmorenoz/HetMOGP for more details about the model). The FullyNG optimises the HetMOGP model using Natural Gradient optimisation for the posterior parameters and also Natural Gradients for the Hyper-Parameters (inducing points, kernel hyper-parameters and multi-output's corregionalisations parameters).
+This repository contains an implementation of a Fully Natural Gradient (FullyNG) Scheme for improving optimisation of the Heterogeneous Multi-output Gaussian Process (HetMOGP) model (visit https://github.com/pmorenoz/HetMOGP for more details about the model). The FullyNG optimises the HetMOGP model using Natural Gradient optimisation for the posterior parameters and also Natural Gradients for the Hyper-Parameters (inducing points, kernel hyper-parameters and multi-output's corregionalisation parameters).
 
 The repository consists of: 
 
