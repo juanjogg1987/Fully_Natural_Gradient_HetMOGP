@@ -17,7 +17,7 @@ The following modules are a Forked version of [Pablo Moreno](https://github.com/
 ```
 model = SVMOGP(X=X, Y=Y, Z=Z, kern_list=kern_list, likelihood=likelihood, Y_metadata=Y_metadata, batch_size=batch)
 ```
-Then we can bypass the model to the FullyNG optimiser. Apart from the model we shoul set the maximun number of iterations, the step-size parameter, momentum in the range \[0.0-1.0\], a lambda prior (usually in the range \[0.0,1.0\] for inducing exploration in the inference process). We suggest using by default the values of momentum = 0.9 and prior_lambda = 1.0e-10
+Then we can bypass the model to the FullyNG optimiser. Apart from the model we should set the maximun number of iterations, the step-size parameter, momentum in the range \[0.0-1.0\], a lambda prior (usually in the range \[0.0,1.0\] for inducing exploration in the inference process). We suggest using by default the values of momentum = 0.9 and prior_lambda = 1.0e-10
 
 * Using FullyNG optimiser: 
 ```
