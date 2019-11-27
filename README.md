@@ -13,7 +13,7 @@ The following modules are a Forked version of [Pablo Moreno](https://github.com/
 
 ## Usage
 
-* Ones the HetMOGP model is created as:
+* The HetMOGP model is created as:
 ```
 model = SVMOGP(X=X, Y=Y, Z=Z, kern_list=kern_list, likelihood=likelihood, Y_metadata=Y_metadata, batch_size=batch)
 ```
