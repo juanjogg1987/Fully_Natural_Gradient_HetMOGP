@@ -255,95 +255,91 @@ def fullyng_opt_HetMOGP(model,Xval=None,Yval=None, max_iters=1000, step_size=0.0
             ysample=ysample, mu=mu,
             Sig=Sig, Wmu=Wmu, WSig=WSig, MC=MC_aux)
 
-        if (Niter+1)%1==0:
+
+        if not model.Z.is_fixed:
+
+            mu_ant = mu_aux.copy()
+            mu_aux = mu.copy()
+
+            num = (np.sqrt(Sig_i - tao_Z * mylamb) + tao_Z * mylamb)
+            Sig_i = (1.0 - tao_Z * beta1_k) * Sig_i + beta1_k * (d2L_dZ[0]+tao_Z*mylamb)
+
+            Sig = 1.0 / Sig_i
+            den = (np.sqrt(Sig_i - tao_Z * mylamb)  + tao_Z * mylamb) ** -1
+            mu = mu - alpha1_k * den * (dL_dZ[0] + tao_Z * mylamb * mu) + gamma1_k * num * den * (mu - mu_ant)
+
+        "The Vprop-mom algorithm for kernel hyper-param"
+        hpmu_ant = hpmu_aux.copy()
+        hpmu_aux = hpmu.copy()
+
+        for i in range(model.num_latent_funcs):
+
+            index = index_ini[i].copy()
+
+            if not index.shape[0] == 0:  # This to check if it is not empty (hyper-par fixed) and not necessary to compute update
+                num = (np.sqrt(hpSig_i[i][index] - tao * mylamb3) + tao * mylamb3)
+                hpSig_i[i][index] = (1.0 - tao * beta3_k) * hpSig_i[i][index] + beta3_k * (d2L_dtheta[i] + tao * mylamb3)
+                hpSig[i][index] = 1.0 / hpSig_i[i][index]
+
+                den = (np.sqrt(hpSig_i[i][index] - tao * mylamb3) + tao * mylamb3) ** -1
+                hpmu[i][index] = hpmu[i][index] - alpha3_k * den * (dL_dtheta[i] + tao*mylamb3 * hpmu[i][index]) + gamma3_k * num * den * (hpmu[i][index] - hpmu_ant[i][index])
+
+                hpSig_i_ant[i][index] = hpSig_i[i][index].copy()
+
+        "The Vprop-mom algorithm for W params for corregionalisation"
+        Wmu_ant = Wmu_aux.copy()
+        Wmu_aux = Wmu.copy()
+
+        for i in range(model.num_latent_funcs):
+            if not eval('model.B_q'+str(i)+'.W.is_fixed'):
+                index = np.arange(i * model.num_output_funcs, i * model.num_output_funcs + model.num_output_funcs)
+                num = (np.sqrt(WSig_i[index] - tao * mylamb4)  + tao * mylamb4)
+                WSig_i[index] = (1.0 - tao * beta4_k) * WSig_i[index] + beta4_k * (d2L_dW[i] + tao * mylamb4)
+                WSig[index] = 1.0 / WSig_i[index]
+                den = (np.sqrt(WSig_i[index] - tao * mylamb4) + tao * mylamb4) ** -1
+                Wmu[index] = Wmu[index] - alpha4_k * den * (dL_dW[i] + tao*mylamb4 * Wmu[index]) + gamma4_k * den * \
+                             num * (Wmu[index] - Wmu_ant[index])
+                WSig_i_ant[index] = WSig_i[index].copy()
 
 
-            if not model.Z.is_fixed:
+        # model.update_model(False)
+        # model.q_u_means.unfix()
+        # model.q_u_chols.unfix()
 
-                mu_ant = mu_aux.copy()
-                mu_aux = mu.copy()
+        dL_dm, dL_dV = compute_stoch_grads_for_qu_HetMOGP(model=model)
 
-                num = (np.sqrt(Sig_i - tao_Z * mylamb) + tao_Z * mylamb)
-                Sig_i = (1.0 - tao_Z * beta1_k) * Sig_i + beta1_k * (d2L_dZ[0]+tao_Z*mylamb)
+        mk_ant = mk_aux.copy()
+        mk_aux = mk.copy()
 
-                Sig = 1.0 / Sig_i
-                den = (np.sqrt(Sig_i - tao_Z * mylamb)  + tao_Z * mylamb) ** -1
-                mu = mu - alpha1_k * den * (dL_dZ[0] + tao_Z * mylamb * mu) + gamma1_k * num * den * (mu - mu_ant)
+        for i in range(model.num_latent_funcs):
 
-            "The Vprop-mom algorithm for kernel hyper-param"
-            hpmu_ant = hpmu_aux.copy()
-            hpmu_aux = hpmu.copy()
+            try:
+                V_i[i, :, :] = V_i[i, :, :] + 2 * beta2_k * dL_dV[i] #+ 1.0e-6*np.eye(*Vk[i,:,:].shape)
+                Vk[i, :, :] = np.linalg.inv(V_i[i, :, :])
+                Vk[i, :, :] = 0.5 * (np.array(Vk[i, :, :]) + np.array(Vk[i, :, :].T))
+                Lk[i, :, :] = np.linalg.cholesky(Vk[i, :, :])
+                mk[:, i] = mk[:, i] - alpha2_k * np.dot(Vk[i, :, :], dL_dm[i]) + gamma2_k * np.dot(
+                    np.dot(Vk[i, :, :], Vki_ant[i, :, :]), (mk[:, i] - mk_ant[:, i]))
+            except LinAlgError:
+                print("Overflow")
+                Vk[i, :, :] = np.linalg.inv(V_i[i, :, :])
+                #print(model['B*'])
+                Vk[i, :, :] = 1.0e-1*np.eye(*Vk[i,:,:].shape)
+                Lk[i, :, :] = linalg.jitchol(Vk[i, :, :])
+                V_i[i, :, :] = np.linalg.inv(Vk[i, :, :])
+                mk[:, i] = mk[:, i]*0.0
 
-            for i in range(model.num_latent_funcs):
-
-                index = index_ini[i].copy()
-
-                if not index.shape[0] == 0:  # This to check if it is not empty (hyper-par fixed) and not necessary to compute update
-                    num = (np.sqrt(hpSig_i[i][index] - tao * mylamb3) + tao * mylamb3)
-                    hpSig_i[i][index] = (1.0 - tao * beta3_k) * hpSig_i[i][index] + beta3_k * (d2L_dtheta[i] + tao * mylamb3)
-                    hpSig[i][index] = 1.0 / hpSig_i[i][index]
-
-                    den = (np.sqrt(hpSig_i[i][index] - tao * mylamb3) + tao * mylamb3) ** -1
-                    hpmu[i][index] = hpmu[i][index] - alpha3_k * den * (dL_dtheta[i] + tao*mylamb3 * hpmu[i][index]) + gamma3_k * num * den * (hpmu[i][index] - hpmu_ant[i][index])
-
-                    hpSig_i_ant[i][index] = hpSig_i[i][index].copy()
-
-            "The Vprop-mom algorithm for W params for corregionalisation"
-            Wmu_ant = Wmu_aux.copy()
-            Wmu_aux = Wmu.copy()
-
-            for i in range(model.num_latent_funcs):
-                if not eval('model.B_q'+str(i)+'.W.is_fixed'):
-                    index = np.arange(i * model.num_output_funcs, i * model.num_output_funcs + model.num_output_funcs)
-                    num = (np.sqrt(WSig_i[index] - tao * mylamb4)  + tao * mylamb4)
-                    WSig_i[index] = (1.0 - tao * beta4_k) * WSig_i[index] + beta4_k * (d2L_dW[i] + tao * mylamb4)
-                    WSig[index] = 1.0 / WSig_i[index]
-                    den = (np.sqrt(WSig_i[index] - tao * mylamb4) + tao * mylamb4) ** -1
-                    Wmu[index] = Wmu[index] - alpha4_k * den * (dL_dW[i] + tao*mylamb4 * Wmu[index]) + gamma4_k * den * \
-                                 num * (Wmu[index] - Wmu_ant[index])
-                    WSig_i_ant[index] = WSig_i[index].copy()
+        Vki_ant = V_i.copy()
 
 
-        if (Niter)%1==0:
+        model.L_u.setfield(choleskies.triang_to_flat(Lk), np.float64)
+        model.m_u.setfield(mk, np.float64)
 
-            # model.update_model(False)
-            # model.q_u_means.unfix()
-            # model.q_u_chols.unfix()
-
-            dL_dm, dL_dV = compute_stoch_grads_for_qu_HetMOGP(model=model)
-
-            mk_ant = mk_aux.copy()
-            mk_aux = mk.copy()
-
-            for i in range(model.num_latent_funcs):
-
-                try:
-                    V_i[i, :, :] = V_i[i, :, :] + 2 * beta2_k * dL_dV[i] #+ 1.0e-6*np.eye(*Vk[i,:,:].shape)
-                    Vk[i, :, :] = np.linalg.inv(V_i[i, :, :])
-                    Vk[i, :, :] = 0.5 * (np.array(Vk[i, :, :]) + np.array(Vk[i, :, :].T))
-                    Lk[i, :, :] = np.linalg.cholesky(Vk[i, :, :])
-                    mk[:, i] = mk[:, i] - alpha2_k * np.dot(Vk[i, :, :], dL_dm[i]) + gamma2_k * np.dot(
-                        np.dot(Vk[i, :, :], Vki_ant[i, :, :]), (mk[:, i] - mk_ant[:, i]))
-                except LinAlgError:
-                    print("Overflow")
-                    Vk[i, :, :] = np.linalg.inv(V_i[i, :, :])
-                    #print(model['B*'])
-                    Vk[i, :, :] = 1.0e-1*np.eye(*Vk[i,:,:].shape)
-                    Lk[i, :, :] = linalg.jitchol(Vk[i, :, :])
-                    V_i[i, :, :] = np.linalg.inv(Vk[i, :, :])
-                    mk[:, i] = mk[:, i]*0.0
-
-            Vki_ant = V_i.copy()
-
-
-            model.L_u.setfield(choleskies.triang_to_flat(Lk), np.float64)
-            model.m_u.setfield(mk, np.float64)
-
-            if (Niter<max_iters-1):
-                # model.q_u_means.fix()
-                # model.q_u_chols.fix()
-                if model.batch_size is not None:
-                    model.set_data(*model.new_batch())
+        if (Niter<max_iters-1):
+            # model.q_u_means.fix()
+            # model.q_u_chols.fix()
+            if model.batch_size is not None:
+                model.set_data(*model.new_batch())
 
 
         tao = tao * incre_tao
