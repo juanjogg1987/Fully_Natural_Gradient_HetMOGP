@@ -60,8 +60,8 @@ class SVMOGP(GPy.core.SparseGP):
                                   W_list=self.W_list, kappa_list=self.kappa_list)
 
         # Set-up optimization parameters: [Z, m_u, L_u]
-        self.q_u_means = Param('m_u', 0.0*np.random.randn(self.num_inducing, self.num_latent_funcs) +
-                               0.0*np.tile(np.random.randn(1,self.num_latent_funcs),(self.num_inducing,1)))
+        self.q_u_means = Param('m_u', 0.2*np.random.randn(self.num_inducing, self.num_latent_funcs) +
+                               0.2*np.tile(np.random.randn(1,self.num_latent_funcs),(self.num_inducing,1)))
         chols = choleskies.triang_to_flat(np.tile(np.eye(self.num_inducing)[None,:,:], (self.num_latent_funcs,1,1)))
         self.q_u_chols = Param('L_u', chols)
 

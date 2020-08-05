@@ -10,7 +10,9 @@ import numpy as np
 import climin
 from functools import partial
 import matplotlib.pyplot as plt
+import Vadam_CCGP as vo
 
+kern.Exponential
 def  get_batch_scales(X_all, X):
     batch_scales = []
     for t, X_all_task in enumerate(X_all):
@@ -71,7 +73,7 @@ def draw_mini_slices(n_samples, batch_size, with_replacement=False):
                 yield slices[i]
 
 
-def latent_functions_prior(Q, lenghtscale=None, variance=None, input_dim=None):
+def latent_functions_prior(Q, lenghtscale=None, variance=None, input_dim=None, ARD=False,inv_l=False):
     if lenghtscale is None:
         lenghtscale = np.random.rand(Q)
     else:
@@ -83,7 +85,7 @@ def latent_functions_prior(Q, lenghtscale=None, variance=None, input_dim=None):
         variance = variance
     kern_list = []
     for q in range(Q):
-        kern_q = kern.RBF(input_dim=input_dim, lengthscale=lenghtscale[q], variance=variance[q], name='rbf')+ kern.White(input_dim)# \
+        kern_q = kern.RBF(input_dim=input_dim, lengthscale=lenghtscale[q], variance=variance[q], name='rbf',ARD=ARD,inv_l=inv_l)#+ kern.White(input_dim)# \
         kern_q.name = 'kern_q'+str(q)
         kern_list.append(kern_q)
     return kern_list
@@ -342,6 +344,7 @@ def vem_algorithm(model, vem_iters=None, maxIter_perVEM = None, step_rate=None ,
                                    decay_mom1=1 - 0.9, decay_mom2=1 - 0.999)
             model.index_VEM = 2*(i) * maxIter_perVEM
             optimizer.minimize_until(c_full)
+            # vo.variational_opt_HetMOGP(model=model, max_iters=maxIter_perVEM, step_size=step_rate, momentum=0.0,prior_lambda=1.0e-1,MC=1)
 
             print('iteration (' + str(i + 1) + ') VE step, mini-batch log_likelihood=' + str(
                 model.log_likelihood().flatten()))
@@ -359,6 +362,7 @@ def vem_algorithm(model, vem_iters=None, maxIter_perVEM = None, step_rate=None ,
             optimizer = climin.Adam(model.optimizer_array, model.stochastic_grad, step_rate=step_rate,decay_mom1=1 - 0.9, decay_mom2=1 - 0.999)
             model.index_VEM = 2*(i) * maxIter_perVEM +maxIter_perVEM
             optimizer.minimize_until(c_full)
+            # vo.variational_opt_HetMOGP(model=model, max_iters=maxIter_perVEM, step_size=step_rate, momentum=0.0,prior_lambda=1.0e-1,MC=1)
             print('iteration (' + str(i + 1) + ') VM step, mini-batch log_likelihood=' + str(
                 model.log_likelihood().flatten()))
 

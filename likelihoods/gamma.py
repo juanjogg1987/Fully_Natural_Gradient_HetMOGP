@@ -114,7 +114,7 @@ class Gamma(Likelihood):
         # Variational Expectation
         # gh: Gaussian-Hermite quadrature
         if gh_points is None:
-            gh_f, gh_w = self._gh_points(T=16)
+            gh_f, gh_w = self._gh_points(T=20)
         else:
             gh_f, gh_w = gh_points
         gh_w = gh_w / np.sqrt(np.pi)
@@ -159,7 +159,7 @@ class Gamma(Likelihood):
         if GN is None: GN = False
 
         if gh_points is None:
-            gh_f, gh_w = self._gh_points(T=16)
+            gh_f, gh_w = self._gh_points(T=20)
         else:
             gh_f, gh_w = gh_points
         gh_w = gh_w / np.sqrt(np.pi)
