@@ -14,7 +14,7 @@ The repository consists of:
 
 - **FunctionExample_Variational_Optimisation.py**: This file is an example of how variational optimisation together with natural gradients allows to induce exploration for improving inference of an objective function.
 
-![Variational_Optimisation](tmp/variational_optimisation_KL2.pdf) 
+![Variational_Optimisation](tmp/toy4.png) 
 
 The following modules are a Forked version of [Pablo Moreno](https://github.com/pmorenoz/HetMOGP)'s implementation. We recommend the user to work using this package version:
 - **hetmogp**: This block contains all model definitions, inference, and important utilities. 
