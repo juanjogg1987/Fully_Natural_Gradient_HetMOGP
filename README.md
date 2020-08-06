@@ -22,7 +22,7 @@ The following modules are a Forked version of [Pablo Moreno](https://github.com/
 
 ## Usage
 
-The modules of this repository mainly rely on:
+The modules of this repository have been tested in **Python 3.6** and mainly rely on:
 * GPy toolbox which can be installed with:
 ```
 pip install gpy
