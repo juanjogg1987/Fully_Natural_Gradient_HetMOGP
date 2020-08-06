@@ -6,7 +6,7 @@ This repository also contains in the folder 'convhetmogp2' an extension of the H
 
 The repository consists of: 
 
-- **fully_natural_gradient.py**: This module contains the functions **fullyng_opt_HetMOGP** and **hybrid_opt_HetMOGP**
+- **fully_natural_gradient.py**: This module contains the function **optimise_HetMOGP**.
 
 - **load_datasets.py**: This module contains different toy examples with different number of Heterogeneous Outputs and loads the real dataset like London, Naval, Sarcos and MOCAP. 
 
