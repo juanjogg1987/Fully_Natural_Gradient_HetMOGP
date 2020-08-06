@@ -68,7 +68,7 @@ def dEq_dmean_MC(mean,sig,MC=1):
 "VOKL stands for Variational Optimisation with KL penalisation"
 "Newton stands for the Newton method"
 
-method = 'VO'
+method = 'VOKL'
 max_iter = 80# 80 #40
 MC=50
 q_mean = -3.0#-3.0
