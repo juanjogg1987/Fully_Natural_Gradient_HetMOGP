@@ -22,6 +22,18 @@ The following modules are a Forked version of [Pablo Moreno](https://github.com/
 
 ## Usage
 
+The modules of this repository mainly rely on:
+* GPy toolbox which can be installed with:
+```
+pip install gpy
+```
+* A forked version of Climin which includes the variational optimisation optimiser VarOpt, it should be installed as:
+```
+git clone https://github.com/juanjogg1987/climin
+cd climin
+pip install .
+```
+
 * The HetMOGP with LMC is created as:
 ```
 model = SVMOGP(X=X, Y=Y, Z=Z, kern_list=kern_list, likelihood=likelihood, Y_metadata=Y_metadata, batch_size=batch)
