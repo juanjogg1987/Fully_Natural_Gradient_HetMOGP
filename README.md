@@ -23,11 +23,11 @@ The following modules are a Forked version of [Pablo Moreno](https://github.com/
 ## Usage
 
 The modules of this repository have been tested in **Python 3.6** and mainly rely on:
-* GPy toolbox which can be installed with:
+* **GPy toolbox** which can be installed with:
 ```
 pip install gpy
 ```
-* A forked version of Climin which includes the variational optimisation optimiser VarOpt, it should be installed as:
+* A **forked version** of **Climin** which includes the variational optimisation optimiser **VarOpt**, it should be installed as:
 ```
 git clone https://github.com/juanjogg1987/climin
 cd climin
